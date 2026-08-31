@@ -64,4 +64,8 @@
 - [ ] Production Deployment
 - [ ] Documentation
 - [ ] Landing Page
+<<<<<<< HEAD
 - [ ] Demo Video
+=======
+- [ ] Demo Video
+>>>>>>> 8e0064824f76ba1cc02a785eba45e299f12389a3
