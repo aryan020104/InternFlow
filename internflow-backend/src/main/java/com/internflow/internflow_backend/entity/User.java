@@ -1,6 +1,7 @@
 package com.internflow.internflow_backend.entity;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -17,8 +18,8 @@ import jakarta.persistence.Table;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(nullable = false)
     private String fullname;
@@ -33,7 +34,7 @@ public class User {
     @JsonIgnore
     private List<Internship> internships;
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -57,7 +58,7 @@ public class User {
         this.internships = internships;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
