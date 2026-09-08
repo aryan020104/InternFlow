@@ -1,49 +1,43 @@
 package com.internflow.internflow_backend.service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.internflow.internflow_backend.entity.Role;
 import com.internflow.internflow_backend.entity.User;
 import com.internflow.internflow_backend.repository.UserRepository;
 
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public User getUserById(UUID id) {
-        return userRepository.findById(id)
-                .orElse(null);
+    public User loginUser(String email, String password) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Invalid Credentials!"));
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("Invalid Credentials!");
+        }
+        return user;
     }
 
-    public User saveUser(User user) {
-        return userRepository.save(user);
-    }
-
-    public User updateUser(UUID id, User updatedUser) {
-
-        User existingUser = userRepository.findById(id).orElse(null);
-
-        if (existingUser == null) {
-            return null;
+    public User registerUser(String fullname, String email, String password, Role role) {
+        Optional<User> existingUsers = userRepository.findByEmail(email);
+        if (existingUsers.isPresent()) {
+            throw new RuntimeException("Email already exists!");
         }
 
-        existingUser.setFullname(updatedUser.getFullname());
-        existingUser.setEmail(updatedUser.getEmail());
-        existingUser.setPassword(updatedUser.getPassword());
+        String hashedPassword = passwordEncoder.encode(password);
 
-        return userRepository.save(existingUser);
-    }
-
-    public void deleteUser(UUID id) {
-        userRepository.deleteById(id);
+        User newUser = new User(fullname, email, hashedPassword, role);
+        return userRepository.save(newUser);
     }
 }

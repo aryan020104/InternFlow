@@ -1,12 +1,19 @@
 package com.internflow.internflow_backend.dto;
 
+import com.internflow.internflow_backend.entity.Role;
+
 public class RegisterRequest {
 
     private String fullname;
     private String email;
     private String password;
+    private Role role;
 
     public RegisterRequest() {
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     public String getFullname() {
@@ -31,5 +38,9 @@ public class RegisterRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
