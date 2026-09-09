@@ -5,30 +5,35 @@ import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.internflow.internflow_backend.dto.AuthResponse;
 import com.internflow.internflow_backend.entity.Role;
 import com.internflow.internflow_backend.entity.User;
 import com.internflow.internflow_backend.exception.EmailAlreadyExistsException;
 import com.internflow.internflow_backend.exception.InvalidCredentialsException;
 import com.internflow.internflow_backend.repository.UserRepository;
+import com.internflow.internflow_backend.security.JwtService;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
-    public User loginUser(String email, String password) {
+    public AuthResponse loginUser(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new InvalidCredentialsException("Invalid Credentials!"));
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new InvalidCredentialsException("Invalid Credentials!");
         }
-        return user;
+        String token = jwtService.generateToken(user.getId(), user.getRole());
+        return new AuthResponse(token);
     }
 
     public User registerUser(String fullname, String email, String password, Role role) {
@@ -42,4 +47,5 @@ public class UserService {
         User newUser = new User(fullname, email, hashedPassword, role);
         return userRepository.save(newUser);
     }
+
 }

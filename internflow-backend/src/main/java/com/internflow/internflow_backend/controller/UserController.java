@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.internflow.internflow_backend.dto.AuthResponse;
 import com.internflow.internflow_backend.dto.LoginRequest;
 import com.internflow.internflow_backend.dto.RegisterRequest;
 import com.internflow.internflow_backend.entity.User;
@@ -29,7 +30,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public User login(@RequestBody LoginRequest request) {
+    public AuthResponse login(@RequestBody LoginRequest request) {
         return userService.loginUser(
             request.getEmail(),
             request.getPassword());
