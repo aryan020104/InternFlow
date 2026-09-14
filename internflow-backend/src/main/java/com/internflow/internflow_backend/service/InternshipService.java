@@ -9,6 +9,7 @@ import com.internflow.internflow_backend.dto.InternshipCreateRequest;
 import com.internflow.internflow_backend.entity.Internship;
 import com.internflow.internflow_backend.entity.Role;
 import com.internflow.internflow_backend.entity.User;
+import com.internflow.internflow_backend.exception.UnauthorizedRoleException;
 import com.internflow.internflow_backend.repository.InternshipRepository;
 import com.internflow.internflow_backend.repository.UserRepository;
 
@@ -37,7 +38,8 @@ public class InternshipService {
                 .orElseThrow(() -> new RuntimeException("User not found: " + userId));
 
         if (user.getRole() != Role.COMPANY) {
-            throw new RuntimeException("Only companies can create internships");
+            throw new UnauthorizedRoleException(
+                    "Only companies can create internships");
         }
 
         Internship internship = new Internship();

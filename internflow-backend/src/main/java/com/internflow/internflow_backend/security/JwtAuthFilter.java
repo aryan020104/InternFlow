@@ -32,14 +32,26 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
 
-            Claims claims = jwtService.extractClaims(token);
-            UUID userId = UUID.fromString(claims.getSubject());
-            String role = claims.get("role", String.class);
+            try {
+                Claims claims = jwtService.extractClaims(token);
 
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userId, null,
-                    List.of(() -> "ROLE_" + role));
+                UUID userId = UUID.fromString(claims.getSubject());
+                String role = claims.get("role", String.class);
 
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+                System.out.println("JWT USER ID: " + userId);
+                System.out.println("JWT ROLE: " + role);
+
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userId,
+                        null,
+                        List.of(() -> "ROLE_" + role));
+
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+
+            } catch (Exception e) {
+                System.out.println("JWT ERROR: " + e.getClass().getName());
+                System.out.println("JWT MESSAGE: " + e.getMessage());
+            }
         }
 
         filterChain.doFilter(request, response);

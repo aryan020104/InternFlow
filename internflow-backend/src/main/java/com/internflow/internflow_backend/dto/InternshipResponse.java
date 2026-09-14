@@ -1,16 +1,31 @@
 package com.internflow.internflow_backend.dto;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.validator.constraints.UUID;
+
 import com.internflow.internflow_backend.entity.InternshipDuration;
 import com.internflow.internflow_backend.entity.InternshipField;
+import com.internflow.internflow_backend.entity.InternshipStatus;
 
-public class InternshipCreateRequest {
-
+public class InternshipResponse {
+    private UUID id;
     private String title;
     private InternshipField field;
     private String location;
     private InternshipDuration duration;
     private String compensation;
     private String description;
+    private InternshipStatus status;
+    private LocalDateTime postedAt;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -26,6 +41,10 @@ public class InternshipCreateRequest {
 
     public void setField(InternshipField field) {
         this.field = field;
+    }
+
+    public String getLocation() {
+        return location;
     }
 
     public void setLocation(String location) {
@@ -56,8 +75,20 @@ public class InternshipCreateRequest {
         this.description = description;
     }
 
-    public String getLocation() {
-        return location;
+    public InternshipStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(InternshipStatus status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getPostedAt() {
+        return postedAt;
+    }
+
+    public void setPostedAt(LocalDateTime postedAt) {
+        this.postedAt = postedAt;
     }
 
 }
