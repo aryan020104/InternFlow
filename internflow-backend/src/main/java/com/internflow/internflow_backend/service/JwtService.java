@@ -1,4 +1,4 @@
-package com.internflow.internflow_backend.security;
+package com.internflow.internflow_backend.service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;

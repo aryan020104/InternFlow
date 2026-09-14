@@ -1,17 +1,19 @@
 package com.internflow.internflow_backend.controller;
 
 import java.util.List;
+import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.internflow.internflow_backend.dto.InternshipCreateRequest;
 import com.internflow.internflow_backend.entity.Internship;
 import com.internflow.internflow_backend.service.InternshipService;
 
@@ -19,8 +21,11 @@ import com.internflow.internflow_backend.service.InternshipService;
 @RequestMapping("/api/internships")
 public class InternshipController {
 
-    @Autowired
-    private InternshipService internshipService;
+    private final InternshipService internshipService;
+
+    public InternshipController(InternshipService internshipService) {
+        this.internshipService = internshipService;
+    }
 
     @GetMapping
     public List<Internship> getAllInternships() {
@@ -28,23 +33,22 @@ public class InternshipController {
     }
 
     @GetMapping("/{id}")
-    public Internship getInternshipById(@PathVariable Long id) {
+    public Internship getInternshipById(@PathVariable UUID id) {
         return internshipService.getInternshipById(id);
     }
 
+    @PreAuthorize("hasRole('COMPANY')")
     @PostMapping
-    public Internship createInternship(@RequestBody Internship internship) {
-        return internshipService.saveInternship(internship);
+    public Internship createInternship(
+            @RequestBody InternshipCreateRequest request) {
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        UUID userId = UUID.fromString(authentication.getName());
+
+        return internshipService.createInternship(request, userId);
     }
 
-    @PutMapping("/{id}")
-    public Internship updateInternship(@PathVariable Long id,
-                                       @RequestBody Internship internship) {
-        return internshipService.updateInternship(id, internship);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteInternship(@PathVariable Long id) {
-        internshipService.deleteInternship(id);
-    }
+    
 }

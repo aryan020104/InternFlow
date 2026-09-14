@@ -1,14 +1,18 @@
 package com.internflow.internflow_backend.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,33 +20,51 @@ import jakarta.persistence.Table;
 public class Internship {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(nullable = false)
-    private String companyName;
+    private String title;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String jobTitle;
+    private InternshipField field;
 
     private String location;
 
-    private Double salary;
+    @Enumerated(EnumType.STRING)
+    private InternshipDuration duration;
 
-    private String status;
+    private String compensation;
 
-    private LocalDate applicationDate;
+    @Column(length = 2000)
+    private String description;
 
-    private LocalDate deadline;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private InternshipStatus status;
 
-    @Column(length = 1000)
-    private String notes;
+    @Column(nullable = false)
+    private LocalDateTime postedAt;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @PrePersist
+    protected void onCreate() {
+        postedAt = LocalDateTime.now();
+        if (status == null) {
+            status = InternshipStatus.OPEN;
+        }
+    }
 
-    public Internship() {
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public User getUser() {
@@ -53,76 +75,68 @@ public class Internship {
         this.user = user;
     }
 
-    public Long getId() {
-        return id;
+    public String getTitle() {
+        return title;
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getJobTitle() {
-        return jobTitle;
+    public InternshipField getField() {
+        return field;
+    }
+
+    public void setField(InternshipField field) {
+        this.field = field;
     }
 
     public String getLocation() {
         return location;
     }
 
-    public Double getSalary() {
-        return salary;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public LocalDate getApplicationDate() {
-        return applicationDate;
-    }
-
-    public LocalDate getDeadline() {
-        return deadline;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public void setJobTitle(String jobTitle) {
-        this.jobTitle = jobTitle;
-    }
-
     public void setLocation(String location) {
         this.location = location;
     }
 
-    public void setSalary(Double salary) {
-        this.salary = salary;
+    public InternshipDuration getDuration() {
+        return duration;
     }
 
-    public void setStatus(String status) {
+    public void setDuration(InternshipDuration duration) {
+        this.duration = duration;
+    }
+
+    public String getCompensation() {
+        return compensation;
+    }
+
+    public void setCompensation(String compensation) {
+        this.compensation = compensation;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public InternshipStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(InternshipStatus status) {
         this.status = status;
     }
 
-    public void setApplicationDate(LocalDate applicationDate) {
-        this.applicationDate = applicationDate;
+    public LocalDateTime getPostedAt() {
+        return postedAt;
     }
 
-    public void setDeadline(LocalDate deadline) {
-        this.deadline = deadline;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
+    public void setPostedAt(LocalDateTime postedAt) {
+        this.postedAt = postedAt;
     }
 
 }

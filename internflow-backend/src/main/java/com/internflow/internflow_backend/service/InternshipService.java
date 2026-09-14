@@ -1,52 +1,55 @@
 package com.internflow.internflow_backend.service;
 
 import java.util.List;
+import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.internflow.internflow_backend.dto.InternshipCreateRequest;
 import com.internflow.internflow_backend.entity.Internship;
+import com.internflow.internflow_backend.entity.Role;
+import com.internflow.internflow_backend.entity.User;
 import com.internflow.internflow_backend.repository.InternshipRepository;
+import com.internflow.internflow_backend.repository.UserRepository;
 
 @Service
 public class InternshipService {
 
-    @Autowired
-    private InternshipRepository internshipRepository;
+    private final InternshipRepository internshipRepository;
+    private final UserRepository userRepository;
+
+    public InternshipService(InternshipRepository internshipRepository, UserRepository userRepository) {
+        this.internshipRepository = internshipRepository;
+        this.userRepository = userRepository;
+    }
 
     public List<Internship> getAllInternships() {
         return internshipRepository.findAll();
     }
 
-    public Internship getInternshipById(Long id) {
-        return internshipRepository.findById(id).orElse(null);
+    public Internship getInternshipById(UUID id) {
+        return internshipRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Internship not found: " + id));
     }
 
-    public Internship saveInternship(Internship internship) {
-        return internshipRepository.save(internship);
-    }
+    public Internship createInternship(InternshipCreateRequest request, UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found: " + userId));
 
-    public Internship updateInternship(Long id, Internship updatedInternship) {
-
-        Internship internship = internshipRepository.findById(id).orElse(null);
-
-        if (internship == null) {
-            return null;
+        if (user.getRole() != Role.COMPANY) {
+            throw new RuntimeException("Only companies can create internships");
         }
 
-        internship.setCompanyName(updatedInternship.getCompanyName());
-        internship.setJobTitle(updatedInternship.getJobTitle());
-        internship.setLocation(updatedInternship.getLocation());
-        internship.setSalary(updatedInternship.getSalary());
-        internship.setStatus(updatedInternship.getStatus());
-        internship.setApplicationDate(updatedInternship.getApplicationDate());
-        internship.setDeadline(updatedInternship.getDeadline());
-        internship.setNotes(updatedInternship.getNotes());
+        Internship internship = new Internship();
+
+        internship.setUser(user);
+        internship.setTitle(request.getTitle());
+        internship.setField(request.getField());
+        internship.setLocation(request.getLocation());
+        internship.setDuration(request.getDuration());
+        internship.setCompensation(request.getCompensation());
+        internship.setDescription(request.getDescription());
 
         return internshipRepository.save(internship);
-    }
-
-    public void deleteInternship(Long id) {
-        internshipRepository.deleteById(id);
     }
 }
