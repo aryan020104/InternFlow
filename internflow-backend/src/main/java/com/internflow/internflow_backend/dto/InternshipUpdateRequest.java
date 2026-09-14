@@ -1,31 +1,16 @@
 package com.internflow.internflow_backend.dto;
 
-import java.time.LocalDateTime;
-
-import java.util.UUID;
-
 import com.internflow.internflow_backend.entity.InternshipDuration;
 import com.internflow.internflow_backend.entity.InternshipField;
-import com.internflow.internflow_backend.entity.InternshipStatus;
 
-public class InternshipResponse {
-    private UUID id;
+public class InternshipUpdateRequest {
+
     private String title;
     private InternshipField field;
     private String location;
     private InternshipDuration duration;
     private String compensation;
     private String description;
-    private InternshipStatus status;
-    private LocalDateTime postedAt;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(java.util.UUID id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;
@@ -75,20 +60,5 @@ public class InternshipResponse {
         this.description = description;
     }
 
-    public InternshipStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(InternshipStatus status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getPostedAt() {
-        return postedAt;
-    }
-
-    public void setPostedAt(LocalDateTime postedAt) {
-        this.postedAt = postedAt;
-    }
-
+    
 }
