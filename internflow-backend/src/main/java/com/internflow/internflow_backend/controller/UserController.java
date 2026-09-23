@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.internflow.internflow_backend.dto.AuthResponse;
 import com.internflow.internflow_backend.dto.LoginRequest;
 import com.internflow.internflow_backend.dto.RegisterRequest;
+import com.internflow.internflow_backend.dto.UserResponse;
 import com.internflow.internflow_backend.entity.User;
 import com.internflow.internflow_backend.service.UserService;
-
 
 @RestController
 @RequestMapping("/api/users")
@@ -21,21 +21,31 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/signup")
-    public User signup(@RequestBody RegisterRequest request) {
-        return userService.registerUser(
-            request.getFullname(),
-            request.getEmail(),
-            request.getPassword(),
-            request.getRole());
+    public UserResponse signup(@RequestBody RegisterRequest request) {
+
+        User user = userService.registerUser(
+                request.getFullname(),
+                request.getEmail(),
+                request.getPassword(),
+                request.getRole());
+
+        UserResponse response = new UserResponse();
+
+        response.setId(user.getId());
+        response.setFullname(user.getFullname());
+        response.setEmail(user.getEmail());
+        response.setRole(user.getRole());
+        response.setCreatedAt(user.getCreatedAt());
+        response.setUpdatedAt(user.getUpdatedAt());
+
+        return response;
     }
 
     @PostMapping("/login")
     public AuthResponse login(@RequestBody LoginRequest request) {
         return userService.loginUser(
-            request.getEmail(),
-            request.getPassword());
+                request.getEmail(),
+                request.getPassword());
     }
-    
-    
-   
+
 }
