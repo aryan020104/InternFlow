@@ -1,0 +1,70 @@
+package com.internflow.internflow_backend.dto;
+
+import java.util.UUID;
+
+public class StudentResponse {
+    private UUID id;
+    private String firstName;
+    private String lastName;
+    private UUID universityId;
+    private String fieldOfStudy;
+    private String phone;
+    private String profilePhotoUrl;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public UUID getUniversityId() {
+        return universityId;
+    }
+
+    public void setUniversityId(UUID universityId) {
+        this.universityId = universityId;
+    }
+
+    public String getFieldOfStudy() {
+        return fieldOfStudy;
+    }
+
+    public void setFieldOfStudy(String fieldOfStudy) {
+        this.fieldOfStudy = fieldOfStudy;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getProfilePhotoUrl() {
+        return profilePhotoUrl;
+    }
+
+    public void setProfilePhotoUrl(String profilePhotoUrl) {
+        this.profilePhotoUrl = profilePhotoUrl;
+    }
+
+}

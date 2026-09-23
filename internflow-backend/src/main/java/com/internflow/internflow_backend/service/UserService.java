@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 import com.internflow.internflow_backend.dto.AuthResponse;
 import com.internflow.internflow_backend.entity.Company;
 import com.internflow.internflow_backend.entity.Role;
+import com.internflow.internflow_backend.entity.Student;
 import com.internflow.internflow_backend.entity.User;
 import com.internflow.internflow_backend.exception.EmailAlreadyExistsException;
 import com.internflow.internflow_backend.exception.InvalidCredentialsException;
 import com.internflow.internflow_backend.repository.CompanyRepository;
+import com.internflow.internflow_backend.repository.StudentRepository;
 import com.internflow.internflow_backend.repository.UserRepository;
 import com.internflow.internflow_backend.security.JwtService;
 
@@ -22,13 +24,16 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final CompanyRepository companyRepository;
+    private final StudentRepository studentRepository;
 
     public UserService(UserRepository userRepository, CompanyRepository companyRepository,
-            PasswordEncoder passwordEncoder, JwtService jwtService) {
+            PasswordEncoder passwordEncoder, JwtService jwtService, StudentRepository studentRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.companyRepository = companyRepository;
+        this.studentRepository = studentRepository;
+
     }
 
     public AuthResponse loginUser(String email, String password) {
@@ -65,6 +70,18 @@ public class UserService {
             company.setRole(role);
 
             return companyRepository.save(company);
+        }
+
+        if (role == Role.STUDENT) {
+
+            Student student = new Student();
+
+            student.setFullname(fullname);
+            student.setEmail(email);
+            student.setPassword(hashedPassword);
+            student.setRole(role);
+
+            return studentRepository.save(student);
         }
 
         User newUser = new User(
