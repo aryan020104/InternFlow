@@ -22,8 +22,11 @@ public class ApplicationService {
     private final InternshipRepository internshipRepository;
     private final StudentRepository studentRepository;
 
-    public ApplicationService(ApplicationRepository applicationRepository, InternshipRepository internshipRepository,
+    public ApplicationService(
+            ApplicationRepository applicationRepository,
+            InternshipRepository internshipRepository,
             StudentRepository studentRepository) {
+
         this.applicationRepository = applicationRepository;
         this.internshipRepository = internshipRepository;
         this.studentRepository = studentRepository;
@@ -46,16 +49,10 @@ public class ApplicationService {
         application.setStudent(student);
         application.setInternship(internship);
 
-        Application savedApplication = applicationRepository.save(application);
+        Application savedApplication =
+                applicationRepository.save(application);
 
-        ApplicationResponse response = new ApplicationResponse();
-
-        response.setId(savedApplication.getId());
-        response.setInternshipId(savedApplication.getInternship().getId());
-        response.setStatus(savedApplication.getStatus());
-        response.setAppliedAt(savedApplication.getAppliedAt());
-
-        return response;
+        return toResponse(savedApplication);
     }
 
     public List<ApplicationResponse> getMyApplications(UUID studentId) {
@@ -66,19 +63,11 @@ public class ApplicationService {
 
         return applicationRepository.findAll()
                 .stream()
-                .filter(application -> application.getStudent().getId().equals(student.getId()))
-                .map(application -> {
-
-                    ApplicationResponse response = new ApplicationResponse();
-
-                    response.setId(application.getId());
-                    response.setInternshipId(
-                            application.getInternship().getId());
-                    response.setStatus(application.getStatus());
-                    response.setAppliedAt(application.getAppliedAt());
-
-                    return response;
-                })
+                .filter(application ->
+                        application.getStudent()
+                                .getId()
+                                .equals(student.getId()))
+                .map(this::toResponse)
                 .toList();
     }
 
@@ -98,15 +87,21 @@ public class ApplicationService {
 
         application.setStatus(request.getStatus());
 
-        Application updatedApplication = applicationRepository.save(application);
+        Application updatedApplication =
+                applicationRepository.save(application);
+
+        return toResponse(updatedApplication);
+    }
+
+    private ApplicationResponse toResponse(Application application) {
 
         ApplicationResponse response = new ApplicationResponse();
 
-        response.setId(updatedApplication.getId());
+        response.setId(application.getId());
         response.setInternshipId(
-                updatedApplication.getInternship().getId());
-        response.setStatus(updatedApplication.getStatus());
-        response.setAppliedAt(updatedApplication.getAppliedAt());
+                application.getInternship().getId());
+        response.setStatus(application.getStatus());
+        response.setAppliedAt(application.getAppliedAt());
 
         return response;
     }
