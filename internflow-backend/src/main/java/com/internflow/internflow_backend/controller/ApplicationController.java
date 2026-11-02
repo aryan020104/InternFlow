@@ -8,7 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
+import com.internflow.internflow_backend.dto.ApplicationStatusHistoryResponse;
 import com.internflow.internflow_backend.dto.ApplicationCreateRequest;
 import com.internflow.internflow_backend.dto.ApplicationResponse;
 import com.internflow.internflow_backend.dto.ApplicationUpdateRequest;
@@ -61,5 +61,21 @@ public class ApplicationController {
                 studentId,
                 applicationId,
                 request);
+    }
+
+    @GetMapping("/{applicationId}/history")
+    @PreAuthorize("hasRole('STUDENT')")
+    public List<ApplicationStatusHistoryResponse> getApplicationHistory(
+            @PathVariable UUID applicationId) {
+
+        UUID studentId = UUID.fromString(
+                SecurityContextHolder.getContext()
+                        .getAuthentication()
+                        .getPrincipal()
+                        .toString());
+
+        return applicationService.getApplicationHistory(
+                studentId,
+                applicationId);
     }
 }
