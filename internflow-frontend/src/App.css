@@ -1,0 +1,41 @@
+.welcome-container {
+  text-align: center;
+  margin-top: 100px;
+}
+
+.welcome-container h1 {
+  color: #2563eb;
+  font-size: 40px;
+}
+
+.welcome-container p {
+  color: #64748b;
+  font-size: 18 px;
+}
+
+.dashboard-card {
+  width: 300px;
+  padding: 24px;
+  margin: 40px auto;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-card h2 {
+  color: #1e293b;
+  font-size: 22px;
+}
+
+.dashboard-card p {
+  color: #64748b;
+  font-size: 22px;
+}
+
+.dashboard-card span {
+  display: inline-block;
+  margin-top: 12px;
+  color: #2563eb;
+  font-weight: bold;
+}
