@@ -16,6 +16,8 @@ import com.internflow.internflow_backend.repository.CompanyRepository;
 import com.internflow.internflow_backend.repository.StudentRepository;
 import com.internflow.internflow_backend.repository.UserRepository;
 import com.internflow.internflow_backend.security.JwtService;
+import com.internflow.internflow_backend.entity.University;
+import com.internflow.internflow_backend.repository.UniversityRepository;
 
 @Service
 public class UserService {
@@ -25,14 +27,17 @@ public class UserService {
     private final JwtService jwtService;
     private final CompanyRepository companyRepository;
     private final StudentRepository studentRepository;
+    private final UniversityRepository universityRepository;
 
     public UserService(UserRepository userRepository, CompanyRepository companyRepository,
-            PasswordEncoder passwordEncoder, JwtService jwtService, StudentRepository studentRepository) {
+            PasswordEncoder passwordEncoder, JwtService jwtService, StudentRepository studentRepository,
+            UniversityRepository universityRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.companyRepository = companyRepository;
         this.studentRepository = studentRepository;
+        this.universityRepository = universityRepository;
 
     }
 
@@ -82,6 +87,18 @@ public class UserService {
             student.setRole(role);
 
             return studentRepository.save(student);
+        }
+
+        if (role == Role.UNIVERSITY) {
+
+            University university = new University();
+
+            university.setFullname(fullname);
+            university.setEmail(email);
+            university.setPassword(hashedPassword);
+            university.setRole(role);
+
+            return universityRepository.save(university);
         }
 
         User newUser = new User(
