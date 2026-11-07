@@ -13,28 +13,28 @@ import com.internflow.internflow_backend.security.JwtAuthFilter;
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final JwtAuthFilter jwtAuthFilter;
+        private final JwtAuthFilter jwtAuthFilter;
 
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
-        this.jwtAuthFilter = jwtAuthFilter;
-    }
+        public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
+                this.jwtAuthFilter = jwtAuthFilter;
+        }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(csrf -> csrf.disable())
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(
-                                (request, response, authException) -> response
-                                        .sendError(HttpServletResponse.SC_UNAUTHORIZED)))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/signup", "/api/users/login").permitAll()
-                        .anyRequest().authenticated())
-                .addFilterBefore(
-                        jwtAuthFilter,
-                        UsernamePasswordAuthenticationFilter.class);
+                http.csrf(csrf -> csrf.disable())
+                                .exceptionHandling(exception -> exception
+                                                .authenticationEntryPoint(
+                                                                (request, response, authException) -> response
+                                                                                .sendError(HttpServletResponse.SC_UNAUTHORIZED)))
+                                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers("/api/users/signup", "/api/users/login").permitAll()
+                                                .anyRequest().authenticated())
+                                .addFilterBefore(
+                                                jwtAuthFilter,
+                                                UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
+                return http.build();
+        }
 
 }

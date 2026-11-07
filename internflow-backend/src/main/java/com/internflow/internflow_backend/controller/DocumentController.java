@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.internflow.internflow_backend.entity.Document;
 import com.internflow.internflow_backend.service.DocumentService;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/documents")
@@ -46,5 +49,11 @@ public class DocumentController {
     @DeleteMapping("/{id}")
     public void deleteDocument(@PathVariable UUID id) {
         documentService.deleteDocument(id);
+    }
+
+    @PutMapping("/{id}")
+    public Document updaDocument(@PathVariable UUID id, @RequestBody Document document) {
+
+        return documentService.updateDocument(id, document);
     }
 }

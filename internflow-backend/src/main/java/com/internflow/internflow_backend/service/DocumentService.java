@@ -41,4 +41,19 @@ public class DocumentService {
     public void deleteDocument(UUID id) {
         documentRepository.deleteById(id);
     }
+
+    public Document updateDocument(UUID id, Document updatedDocument) {
+
+        Document existingDocument = documentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Document not found"));
+
+        existingDocument.setType(updatedDocument.getType());
+        existingDocument.setFileName(updatedDocument.getFileName());
+        existingDocument.setFileUrl(updatedDocument.getFileUrl());
+        existingDocument.setFileSizeBytes(updatedDocument.getFileSizeBytes());
+        existingDocument.setStatus(updatedDocument.getStatus());
+        existingDocument.setUploadedAt(updatedDocument.getUploadedAt());
+
+        return documentRepository.save(existingDocument);
+    }
 }
