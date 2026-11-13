@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.internflow.internflow_backend.entity.Interview;
 
 public interface InterviewRepository extends JpaRepository<Interview, UUID> {
+    
 }
